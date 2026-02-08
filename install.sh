@@ -252,4 +252,4 @@ fi
 # Post-install steps
 # ─────────────────────────────────────────────
 echo
-echo "==> Setup complete! Re-login for Docker setup to take effect."
+echo "Setup complete!"

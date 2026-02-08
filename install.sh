@@ -134,7 +134,7 @@ zd() {
   elif [ -d "$1" ]; then
     builtin cd "$1"
   else
-    z "$@" && printf "\U000F17A9 " && pwd || echo "Error: Directory not found"
+    z "$@" && printf "-> " && pwd || echo "Error: Directory not found"
   fi
 }
 
@@ -175,12 +175,12 @@ command_timeout = 200
 format = "[$directory$git_branch$git_status]($style)$character"
 
 [character]
-error_symbol = "[✗](bold cyan)"
-success_symbol = "[❯](bold cyan)"
+error_symbol = "[>](bold red)"
+success_symbol = "[>](bold cyan)"
 
 [directory]
 truncation_length = 2
-truncation_symbol = "…/"
+truncation_symbol = ".../"
 repo_root_style = "bold cyan"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
@@ -191,17 +191,17 @@ style = "italic cyan"
 [git_status]
 format     = '[$all_status]($style)'
 style      = "cyan"
-ahead      = "⇡${count} "
-diverged   = "⇕⇡${ahead_count}⇣${behind_count} "
-behind     = "⇣${count} "
-conflicted = " "
-up_to_date = " "
+ahead      = "+${count} "
+diverged   = "+-${ahead_count}/${behind_count} "
+behind     = "-${count} "
+conflicted = "x "
+up_to_date = ""
 untracked  = "? "
-modified   = " "
-stashed    = ""
-staged     = ""
-renamed    = ""
-deleted    = ""
+modified   = "* "
+stashed    = "$"
+staged     = "+"
+renamed    = "r"
+deleted    = "d"
 STARSHIP
 
 echo

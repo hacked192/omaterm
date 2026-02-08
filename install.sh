@@ -35,10 +35,12 @@ OFFICIAL_PKGS=(
   tailscale
 )
 
+echo
 echo "==> Installing Arch packages..."
 sudo pacman -Syu --needed --noconfirm "${OFFICIAL_PKGS[@]}"
 
 if ! command -v yay &>/dev/null; then
+  echo
   echo "==> Installing yay..."
   tmpdir=$(mktemp -d)
   git clone https://aur.archlinux.org/yay-bin.git "$tmpdir/yay"
@@ -50,18 +52,20 @@ AUR_PKGS=(
   claude-code
 )
 
+echo
 echo "==> Installing AUR packages..."
 yay -S --needed --noconfirm "${AUR_PKGS[@]}"
 
 # ─────────────────────────────────────────────
 # Git config
 # ─────────────────────────────────────────────
+echo
 echo "==> Configuring git..."
 
 # Get user info via gum
-echo ""
-GIT_NAME=$(gum input --placeholder "Your full name" --prompt "Git user name: " < /dev/tty)
-GIT_EMAIL=$(gum input --placeholder "your@email.com" --prompt "Git email: " < /dev/tty)
+echo
+GIT_NAME=$(gum input --placeholder "Your full name" --prompt "Git user name: " </dev/tty)
+GIT_EMAIL=$(gum input --placeholder "your@email.com" --prompt "Git email: " </dev/tty)
 
 cat >"$HOME/.gitconfig" <<GITCONFIG
 [user]
@@ -106,6 +110,7 @@ GITCONFIG
 # ─────────────────────────────────────────────
 # Shell config
 # ─────────────────────────────────────────────
+echo
 echo "==> Writing ~/.bashrc..."
 cat >"$HOME/.bashrc" <<'BASHRC'
 # If not running interactively, don't do anything
@@ -199,6 +204,7 @@ renamed    = ""
 deleted    = ""
 STARSHIP
 
+echo
 echo "==> Writing mise config..."
 mkdir -p "$HOME/.config/mise"
 cat >"$HOME/.config/mise/config.toml" <<'MISE'
@@ -207,12 +213,14 @@ experimental = true
 idiomatic_version_file_enable_tools = ["ruby"]
 MISE
 
+echo
 echo "==> Setup LazyVim..."
 git clone https://github.com/LazyVim/starter ~/.config/nvim
 
 # ─────────────────────────────────────────────
 # Enable systemd services
 # ─────────────────────────────────────────────
+echo
 echo "==> Enabling services..."
 sudo systemctl enable --now docker.service
 sudo systemctl enable --now sshd.service
@@ -227,16 +235,18 @@ fi
 # ─────────────────────────────────────────────
 # Interactive setup
 # ─────────────────────────────────────────────
-if gum confirm "Authenticate with GitHub?" < /dev/tty; then
+echo
+if gum confirm "Authenticate with GitHub?" </dev/tty; then
   gh auth login
 fi
 
-if gum confirm "Connect to Tailscale network?" < /dev/tty; then
+echo
+if gum confirm "Connect to Tailscale network?" </dev/tty; then
   sudo tailscale up --ssh --accept-routes
 fi
 
 # ─────────────────────────────────────────────
 # Post-install steps
 # ─────────────────────────────────────────────
-echo ""
+echo
 echo "==> Setup complete! Re-login for Docker setup to take effect."

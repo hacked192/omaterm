@@ -273,16 +273,10 @@ fi
 # ─────────────────────────────────────────────
 # Post-install steps
 # ─────────────────────────────────────────────
-echo
-echo "Setup complete!"
-
 if [[ $DOCKER_GROUP_ADDED == true ]]; then
   echo
-  if gum confirm "Sudoless Docker requires logout. Log out now?" </dev/tty; then
-    if [[ -o login ]]; then
-      logout
-    else
-      kill -HUP $$
-    fi
-  fi
+  echo "NOTE: Sudoless Docker requires logging out once first."
 fi
+
+echo
+echo "Setup complete!"

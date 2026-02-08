@@ -222,9 +222,11 @@ experimental = true
 idiomatic_version_file_enable_tools = ["ruby"]
 MISE
 
-echo
-echo "==> Setup LazyVim..."
-git clone https://github.com/LazyVim/starter ~/.config/nvim
+if [ ! -d "$HOME/.config/nvim" ]; then
+  echo
+  echo "==> Setup LazyVim..."
+  git clone https://github.com/LazyVim/starter ~/.config/nvim
+fi
 
 # ─────────────────────────────────────────────
 # Enable systemd services

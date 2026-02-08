@@ -131,6 +131,7 @@ alias c='opencode'
 alias cx='claude --permission-mode=plan --allow-dangerously-skip-permissions'
 alias d='docker'
 alias r='rails'
+alias v='vim'
 n() { if [[ $# -eq 0 ]]; then nvim .; else nvim "$@"; fi; }
 
 # Git

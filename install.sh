@@ -60,8 +60,8 @@ echo "==> Configuring git..."
 
 # Get user info via gum
 echo ""
-GIT_NAME=$(gum input --placeholder "Your full name" --prompt "Git user name: ")
-GIT_EMAIL=$(gum input --placeholder "your@email.com" --prompt "Git email: ")
+GIT_NAME=$(gum input --placeholder "Your full name" --prompt "Git user name: " < /dev/tty)
+GIT_EMAIL=$(gum input --placeholder "your@email.com" --prompt "Git email: " < /dev/tty)
 
 cat >"$HOME/.gitconfig" <<GITCONFIG
 [user]
@@ -227,11 +227,11 @@ fi
 # ─────────────────────────────────────────────
 # Interactive setup
 # ─────────────────────────────────────────────
-if gum confirm "Authenticate with GitHub?"; then
+if gum confirm "Authenticate with GitHub?" < /dev/tty; then
   gh auth login
 fi
 
-if gum confirm "Connect to Tailscale network?"; then
+if gum confirm "Connect to Tailscale network?" < /dev/tty; then
   sudo tailscale up --ssh --accept-routes
 fi
 

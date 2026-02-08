@@ -220,14 +220,20 @@ mkdir -p "$HOME/.ssh"
 chmod 700 "$HOME/.ssh"
 
 if [ ! -f "$HOME/.ssh/authorized_keys" ] || [ ! -s "$HOME/.ssh/authorized_keys" ]; then
-  echo
-  echo "Paste your SSH public key(s) below (one per line, Ctrl+D when done):"
-  SSH_KEYS=$(cat)
-  if [ -n "$SSH_KEYS" ]; then
-    echo "$SSH_KEYS" >"$HOME/.ssh/authorized_keys"
-    chmod 600 "$HOME/.ssh/authorized_keys"
-    echo "SSH keys added to authorized_keys"
+  if gum confirm "Add SSH public key(s) for remote access?" </dev/tty; then
+    echo "Paste your SSH public key(s) below (one per line, blank line when done):"
+    SSH_KEYS=""
+    while IFS= read -r line </dev/tty; do
+      [ -z "$line" ] && break
+      SSH_KEYS="${SSH_KEYS}${line}\n"
+    done
+    if [ -n "$SSH_KEYS" ]; then
+      printf "%s" "$SSH_KEYS" > "$HOME/.ssh/authorized_keys"
+      chmod 600 "$HOME/.ssh/authorized_keys"
+      echo "SSH keys added to authorized_keys"
+    fi
   fi
+fi
 fi
 
 # Configure sshd for key-only auth

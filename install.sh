@@ -219,6 +219,7 @@ echo "==> Configuring SSH..."
 mkdir -p "$HOME/.ssh"
 chmod 700 "$HOME/.ssh"
 
+SSH_KEYS_ADDED=false
 if [ ! -f "$HOME/.ssh/authorized_keys" ] || [ ! -s "$HOME/.ssh/authorized_keys" ]; then
   if gum confirm "Add SSH public key(s) for remote access?" </dev/tty; then
     echo "Paste your SSH public key(s) below (one per line, blank line when done):"
@@ -228,16 +229,16 @@ if [ ! -f "$HOME/.ssh/authorized_keys" ] || [ ! -s "$HOME/.ssh/authorized_keys" 
       SSH_KEYS="${SSH_KEYS}${line}\n"
     done
     if [ -n "$SSH_KEYS" ]; then
-      printf "%s" "$SSH_KEYS" > "$HOME/.ssh/authorized_keys"
+      printf "%s" "$SSH_KEYS" >"$HOME/.ssh/authorized_keys"
       chmod 600 "$HOME/.ssh/authorized_keys"
       echo "SSH keys added to authorized_keys"
+      SSH_KEYS_ADDED=true
     fi
   fi
 fi
-fi
 
-# Configure sshd for key-only auth
-if gum confirm "Disable password authentication for SSH (key-based auth only)?" </dev/tty; then
+# Only disable password auth if we actually configured SSH keys
+if [ "$SSH_KEYS_ADDED" = true ]; then
   sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
   sudo sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
   sudo systemctl restart sshd.service

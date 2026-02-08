@@ -1,85 +1,50 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-echo "==> Omaterm"
+echo -e " ▄██████▄    ▄▄▄▄███▄▄▄▄      ▄████████     ███        ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄  
+███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄
+███    ███ ███   ███   ███   ███    ███    ▀███▀▀██   ███    █▀    ███    ███ ███   ███   ███
+███    ███ ███   ███   ███   ███    ███     ███   ▀  ▄███▄▄▄      ▄███▄▄▄▄██▀ ███   ███   ███
+███    ███ ███   ███   ███ ▀███████████     ███     ▀▀███▀▀▀     ▀▀███▀▀▀▀▀   ███   ███   ███
+███    ███ ███   ███   ███   ███    ███     ███       ███    █▄  ▀███████████ ███   ███   ███
+███    ███ ███   ███   ███   ███    ███     ███       ███    ███   ███    ███ ███   ███   ███
+ ▀██████▀   ▀█   ███   █▀    ███    █▀     ▄████▀     ██████████   ███    ███  ▀█   ███   █▀ 
+                                                                   ███    ███                "
 
 # ─────────────────────────────────────────────
-# Official repo packages
+# Install all packages
 # ─────────────────────────────────────────────
 OFFICIAL_PKGS=(
   # Base tools
-  base-devel
-  git
-  openssh
-  sudo
-  less
-  inetutils
-  whois
+  base-devel git openssh sudo less inetutils whois
 
   # Shell & terminal
-  starship
-  fzf
-  eza
-  zoxide
-  tmux
-  btop
-  jq
-  gum
-  tldr
+  starship fzf eza zoxide tmux btop jq gum tldr
 
   # Editors & dev tools
-  neovim
-  luarocks
-  clang
-  llvm
-  rust
-  mise
-  github-cli
-  lazygit
-  lazydocker
-  opencode
+  neovim luarocks clang llvm rust mise github-cli lazygit lazydocker opencode
 
   # Docker
-  docker
-  docker-buildx
-  docker-compose
+  docker docker-buildx docker-compose
 
   # Media & image processing
-  ffmpeg
-  imagemagick
-  libheif
-  libvips
-  libyaml
-  openslide
-  poppler-glib
-  mupdf-tools
-  rav1e
-  svt-av1
+  ffmpeg imagemagick libheif libvips libyaml openslide poppler-glib mupdf-tools rav1e svt-av1
 
   # Networking
   tailscale
 )
 
-# ─────────────────────────────────────────────
-# Install official packages
-# ─────────────────────────────────────────────
-echo "==> Installing official repo packages..."
+echo "==> Installing Arch packages..."
 sudo pacman -S --needed --noconfirm "${OFFICIAL_PKGS[@]}"
 
-# ─────────────────────────────────────────────
-# Install yay (AUR helper)
-# ─────────────────────────────────────────────
 if ! command -v yay &>/dev/null; then
   echo "==> Installing yay..."
   tmpdir=$(mktemp -d)
-  git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
+  git clone https://aur.archlinux.org/yay-bin.git "$tmpdir/yay"
   (cd "$tmpdir/yay" && makepkg -si --noconfirm)
   rm -rf "$tmpdir"
 fi
 
-# ─────────────────────────────────────────────
-# AUR packages (installed via yay)
-# ─────────────────────────────────────────────
 AUR_PKGS=(
   claude-code
 )
@@ -100,6 +65,9 @@ if ! groups | grep -q docker; then
   sudo usermod -aG docker "$USER"
   echo "    Added $USER to docker group (re-login to take effect)"
 fi
+
+# Add this node to tailscale network
+sudo tailscale up --ssh --accept-routes
 
 # ─────────────────────────────────────────────
 # Git config
@@ -178,7 +146,7 @@ alias ....='cd ../../..'
 
 # Tools
 alias c='opencode'
-alias cx='claude'
+alias cx='claude --permission-mode=plan --allow-dangerously-skip-permissions'
 alias d='docker'
 alias r='rails'
 n() { if [ "$#" -eq 0 ]; then nvim .; else nvim "$@"; fi; }
@@ -189,25 +157,10 @@ alias gcm='git commit -m'
 alias gcam='git commit -a -m'
 alias gcad='git commit -a --amend'
 
-# Other
-alias c="opencode"
-alias cc="claude --permission-mode=plan --allow-dangerously-skip-permissions"
-
 # Init
-if command -v mise &>/dev/null; then
-  eval "$(mise activate bash)"
-fi
-
-if command -v starship &>/dev/null; then
-  # clear stale readline state before rendering prompt (prevents artifacts in prompt after abnormal exits like SIGQUIT)
-  __sanitize_prompt() { printf '\r\033[K'; }
-  PROMPT_COMMAND="__sanitize_prompt${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
-  eval "$(starship init bash)"
-fi
-
-if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init bash)"
-fi
+eval "$(mise activate bash)"
+eval "$(starship init bash)"
+eval "$(zoxide init bash)"
 BASHRC
 
 echo "==> Writing ~/.bash_profile..."
@@ -215,9 +168,6 @@ cat >"$HOME/.bash_profile" <<'BASHPROFILE'
 [[ -f ~/.bashrc ]] && . ~/.bashrc
 BASHPROFILE
 
-# ─────────────────────────────────────────────
-# Starship prompt config
-# ─────────────────────────────────────────────
 echo "==> Writing starship config..."
 mkdir -p "$HOME/.config"
 cat >"$HOME/.config/starship.toml" <<'STARSHIP'
@@ -255,9 +205,6 @@ renamed    = ""
 deleted    = ""
 STARSHIP
 
-# ─────────────────────────────────────────────
-# mise config
-# ─────────────────────────────────────────────
 echo "==> Writing mise config..."
 mkdir -p "$HOME/.config/mise"
 cat >"$HOME/.config/mise/config.toml" <<'MISE'
@@ -266,10 +213,8 @@ experimental = true
 idiomatic_version_file_enable_tools = ["ruby"]
 MISE
 
-# ─────────────────────────────────────────────
-# Neovim config (LazyVim)
-# ─────────────────────────────────────────────
-echo "==> Writing neovim config..."
+echo "==> Setup LazyVim..."
+git clone https://github.com/LazyVim/starter ~/.config/nvim
 
 # ─────────────────────────────────────────────
 # Post-install steps

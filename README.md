@@ -1,6 +1,6 @@
 # Omaterm
 
-A minimal Omarchy-style single-file terminal setup for your headless Arch Linux server or dev box.
+An Omakase-style headless setup for Arch Linux servers or dev boxes in the spirit of Omarchy by DHH.
 
 ## Requirements
 
@@ -19,16 +19,18 @@ curl -fsSL https://omaterm.org/install | bash
 - **Shell**: Bash with starship prompt, fzf, eza, zoxide
 - **Editors**: Neovim (LazyVim), opencode, claude-code
 - **Dev tools**: mise, docker, github-cli, lazygit, lazydocker
-- **System**: SSH, tailscale
+- **Networking**: SSH, tailscale
 - **Git**: Interactive config for user name/email, helpful aliases
-- **Media**: ffmpeg, imagemagick, poppler
 
 ## Interactive prompts
 
 During installation you'll be asked for:
+
 - Git user name
 - Git email address
 
-And you'll have to login into:
+And you'll be offered to setup:
+
 - Tailscale
 - GitHub
+- SSH public keys

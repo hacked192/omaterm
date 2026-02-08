@@ -115,35 +115,31 @@ if [[ ! -f $HOME/.ssh/authorized_keys ]] || [[ ! -s $HOME/.ssh/authorized_keys ]
       SSH_KEYS_ADDED=true
     fi
   fi
-fi
 
-# Only disable password auth if we actually configured SSH keys
-if [[ $SSH_KEYS_ADDED == true ]]; then
-  sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
-  sudo sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
-  sudo systemctl restart sshd.service
-  echo "SSH configured for key-based authentication only"
+  # Only disable password auth if we actually configured SSH keys
+  if [[ $SSH_KEYS_ADDED == true ]]; then
+    sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+    sudo sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+    sudo systemctl restart sshd.service
+    echo "SSH configured for key-based authentication only"
+  fi
 fi
 
 # ─────────────────────────────────────────────
 # Setup Docker group to allow sudo-less access
 # ─────────────────────────────────────────────
-DOCKER_GROUP_ADDED=false
 if ! groups | grep -q docker; then
   sudo usermod -aG docker "$USER"
-  echo "Added $USER to docker group"
-  DOCKER_GROUP_ADDED=true
+  echo "You must log out once to make sudoless Docker available."
 fi
 
 # ─────────────────────────────────────────────
 # Interactive setup
 # ─────────────────────────────────────────────
-echo
 if gum confirm "Authenticate with GitHub?" </dev/tty; then
   gh auth login
 fi
 
-echo
 if gum confirm "Connect to Tailscale network?" </dev/tty; then
   echo "This might take a minute..."
   sudo tailscale up --ssh --accept-routes
@@ -152,9 +148,4 @@ fi
 # ─────────────────────────────────────────────
 # Post-install steps
 # ─────────────────────────────────────────────
-if [[ $DOCKER_GROUP_ADDED == true ]]; then
-  echo
-  echo "NOTE: Sudoless Docker requires logging out once first."
-fi
-
 section "Setup complete!"

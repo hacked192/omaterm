@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Add SSH public keys for remote access and optionally disable password auth
+
+if gum confirm "Add SSH public key(s) for remote access?"; then
+  mkdir -p "$HOME/.ssh"
+  chmod 700 "$HOME/.ssh"
+
+  echo "Paste your SSH public key(s) below (one per line, blank line when done):"
+  NEW_KEYS=""
+  while IFS= read -r line; do
+    [[ -z $line ]] && break
+    NEW_KEYS="${NEW_KEYS}${line}\n"
+  done
+
+  if [[ -z $NEW_KEYS ]]; then
+    echo "No keys provided, skipping"
+    exit 0
+  fi
+
+  # Append new keys, avoiding duplicates
+  printf "%s" "$NEW_KEYS" | while IFS= read -r key; do
+    [[ -z $key ]] && continue
+    if [[ -f "$HOME/.ssh/authorized_keys" ]] && grep -qF "$key" "$HOME/.ssh/authorized_keys" 2>/dev/null; then
+      echo "Key already exists, skipping: ${key:0:40}..."
+    else
+      echo "$key" >>"$HOME/.ssh/authorized_keys"
+      echo "Added key: ${key:0:40}..."
+    fi
+  done
+
+  chmod 600 "$HOME/.ssh/authorized_keys"
+
+  # Only offer to disable password auth if not already disabled
+  if ! grep -q "^PasswordAuthentication no" /etc/ssh/sshd_config 2>/dev/null; then
+    if gum confirm "Disable password authentication for SSH (key-based auth only)?"; then
+      sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+      sudo sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+      sudo systemctl restart sshd.service
+      echo "SSH configured for key-based authentication only"
+    fi
+  fi
+fi

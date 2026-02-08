@@ -98,24 +98,24 @@ cat >"$HOME/.gitconfig" <<GITCONFIG
 [init]
 	defaultBranch = master
 [pull]
-	rebase = true 			 # Rebase (instead of merge) on pull
+	rebase = true
 [push]
-	autoSetupRemote = true   # Automatically set upstream branch on push
+	autoSetupRemote = true
 [diff]
-	algorithm = histogram    # Clearer diffs on moved/edited lines
-	colorMoved = plain       # Highlight moved blocks in diffs
-	mnemonicPrefix = true    # More intuitive refs in diff output
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
 [commit]
-	verbose = true           # Include diff comment in commit message template
+	verbose = true
 [column]
-	ui = auto 			     # Output in columns when possible
+	ui = auto
 [branch]
-	sort = -committerdate    # Sort branches by most recent commit first
+	sort = -committerdate
 [tag]
-	sort = -version:refname  # Sort version numbers as you would expect
+	sort = -version:refname
 [rerere]
-	enabled = true           # Record and reuse conflict resolutions
-	autoupdate = true        # Apply stored conflict resolutions automatically
+	enabled = true
+	autoupdate = true
 GITCONFIG
 
 # Authenticate with GitHub

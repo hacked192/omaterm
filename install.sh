@@ -87,21 +87,6 @@ if [ ! -f "$HOME/.gitconfig" ]; then
 	rebase = true
 [push]
 	autoSetupRemote = true
-[diff]
-	algorithm = histogram
-	colorMoved = plain
-	mnemonicPrefix = true
-[commit]
-	verbose = true
-[column]
-	ui = auto
-[branch]
-	sort = -committerdate
-[tag]
-	sort = -version:refname
-[rerere]
-	enabled = true
-	autoupdate = true
 GITCONFIG
 fi
 

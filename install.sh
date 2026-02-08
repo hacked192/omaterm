@@ -211,7 +211,36 @@ sudo systemctl enable --now docker.service
 sudo systemctl enable --now sshd.service
 sudo systemctl enable --now tailscaled.service
 
-# Add user to docker group
+# ─────────────────────────────────────────────
+# SSH setup
+# ─────────────────────────────────────────────
+echo
+echo "==> Configuring SSH..."
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
+
+if [ ! -f "$HOME/.ssh/authorized_keys" ] || [ ! -s "$HOME/.ssh/authorized_keys" ]; then
+  echo
+  echo "Paste your SSH public key(s) below (one per line, Ctrl+D when done):"
+  SSH_KEYS=$(cat)
+  if [ -n "$SSH_KEYS" ]; then
+    echo "$SSH_KEYS" >"$HOME/.ssh/authorized_keys"
+    chmod 600 "$HOME/.ssh/authorized_keys"
+    echo "SSH keys added to authorized_keys"
+  fi
+fi
+
+# Configure sshd for key-only auth
+if gum confirm "Disable password authentication for SSH (key-based auth only)?" </dev/tty; then
+  sudo sed -i 's/^#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+  sudo sed -i 's/^#*PubkeyAuthentication.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config
+  sudo systemctl restart sshd.service
+  echo "SSH configured for key-based authentication only"
+fi
+
+# ─────────────────────────────────────────────
+# Setup Docker group to allow sudo-less access
+# ─────────────────────────────────────────────
 DOCKER_GROUP_ADDED=false
 if ! groups | grep -q docker; then
   sudo usermod -aG docker "$USER"

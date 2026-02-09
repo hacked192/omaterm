@@ -69,44 +69,44 @@ fi
 # ─────────────────────────────────────────────
 # Shell config
 # ─────────────────────────────────────────────
-section "Writing configs..."
+section "Configuring tools..."
 download config/bashrc >"$HOME/.bashrc"
 echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' >"$HOME/.bash_profile"
-echo "Wrote ~/.bashrc"
+echo "✓ Bash"
 
 # Starship (https://starship.rs/)
 mkdir -p "$HOME/.config"
 download config/starship.toml >"$HOME/.config/starship.toml"
-echo "Wrote ~/.config/starship.toml"
+echo "✓ Starship"
 
 # Mise (https://mise.jdx.dev/)
 mkdir -p "$HOME/.config/mise"
 download config/mise.toml >"$HOME/.config/mise/config.toml"
-echo "Wrote ~/.config/mise.toml"
+echo "✓ Mise"
 
 # Tmux
 mkdir -p "$HOME/.config/tmux"
 download config/tmux.conf >"$HOME/.config/tmux/tmux.conf"
-echo "Wrote ~/.tmux/tmux.config"
+echo "✓ Tmux"
 
 # LazyVim (https://www.lazyvim.org/)
 if [[ ! -d $HOME/.config/nvim ]]; then
   git clone https://github.com/LazyVim/starter ~/.config/nvim
-  echo "Wrote ~/.config/nvim"
+  echo "✓ LazyVim"
 fi
 
 # Use terminal ANSI colors
 mkdir -p "$HOME/.config/nvim/lua/plugins"
 download config/nvim-colorscheme.lua >"$HOME/.config/nvim/lua/plugins/colorscheme.lua"
 download config/nvim-options.lua >"$HOME/.config/nvim/lua/config/options.lua"
-echo "Wrote nvim config changes"
+echo "✓ Nvim"
 
 # Btop ANSI theme
 mkdir -p "$HOME/.config/btop/themes"
 download config/btop.conf >"$HOME/.config/btop/btop.conf"
 download config/btop-ansi.theme >"$HOME/.config/btop/themes/ansi.theme"
 ln -sf "$HOME/.config/btop/themes/ansi.theme" "$HOME/.config/btop/themes/current.theme"
-echo "Wrote ~/.config/btop/btop.conf and ansi.theme"
+echo "✓ Btop"
 
 # ─────────────────────────────────────────────
 # Bins
@@ -115,13 +115,13 @@ section "Adding commands..."
 mkdir -p .local/bin
 
 download bin/omaterm-reinstall >"$HOME/.local/bin/omaterm-reinstall"
-echo "Added omaterm-reinstall"
+echo "✓ omaterm-reinstall"
 
 download bin/omaterm-ssh-key >"$HOME/.local/bin/omaterm-ssh-key"
-echo "Added omaterm-ssh-key"
+echo "✓ omaterm-ssh-key"
 
 download bin/omaterm-ts-chromium >"$HOME/.local/bin/omaterm-ts-chromium"
-echo "Added omaterm-ts-chromium"
+echo "✓ omaterm-ts-chromium"
 
 chmod +x $HOME/.local/bin/*
 
@@ -139,10 +139,10 @@ mise use -g ruby
 section "Enabling services..."
 
 sudo systemctl enable --now docker.service
-echo "Enabled Docker service"
+echo "✓ Docker"
 
 sudo systemctl enable --now sshd.service
-echo "Enabled sshd service"
+echo "✓ sshd"
 
 # ─────────────────────────────────────────────
 # Setup Docker group to allow sudo-less access

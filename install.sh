@@ -141,4 +141,4 @@ fi
 # ─────────────────────────────────────────────
 section "Setup complete!"
 echo "You must log out once to make sudoless Docker available."
-echo "Run omaterm-use-ssh-key on a console with clipboard access to switch from password to SSH key"
+echo "Run omaterm-ssh-key on a console with clipboard access to switch from password to SSH key"

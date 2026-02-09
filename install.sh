@@ -72,37 +72,50 @@ fi
 section "Writing configs..."
 download config/bashrc >"$HOME/.bashrc"
 echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' >"$HOME/.bash_profile"
+echo "Wrote ~/.bashrc"
 
 # Starship (https://starship.rs/)
 mkdir -p "$HOME/.config"
 download config/starship.toml >"$HOME/.config/starship.toml"
+echo "Wrote ~/.config/starship.toml"
 
 # Mise (https://mise.jdx.dev/)
 mkdir -p "$HOME/.config/mise"
 download config/mise.toml >"$HOME/.config/mise/config.toml"
+echo "Wrote ~/.config/mise.toml"
 
 # Tmux
 mkdir -p "$HOME/.config/tmux"
 download config/tmux.conf >"$HOME/.config/tmux/tmux.conf"
+echo "Wrote ~/.tmux/tmux.config"
 
 # LazyVim (https://www.lazyvim.org/)
 if [[ ! -d $HOME/.config/nvim ]]; then
   git clone https://github.com/LazyVim/starter ~/.config/nvim
+  echo "Wrote ~/.config/nvim"
 fi
 
 # Use terminal ANSI colors
 mkdir -p "$HOME/.config/nvim/lua/plugins"
 download config/nvim-colorscheme.lua >"$HOME/.config/nvim/lua/plugins/colorscheme.lua"
 download config/nvim-options.lua >"$HOME/.config/nvim/lua/config/options.lua"
+echo "Wrote nvim config changes"
 
 # ─────────────────────────────────────────────
 # Bins
 # ─────────────────────────────────────────────
 section "Adding commands..."
 mkdir -p .local/bin
+
 download bin/omaterm-reinstall >"$HOME/.local/bin/omaterm-reinstall"
+echo "Added omaterm-reinstall"
+
 download bin/omaterm-ssh-key >"$HOME/.local/bin/omaterm-ssh-key"
+echo "Added omaterm-ssh-key"
+
 download bin/omaterm-ts-chromium >"$HOME/.local/bin/omaterm-ts-chromium"
+echo "Added omaterm-ts-chromium"
+
 chmod +x $HOME/.local/bin/*
 
 # ─────────────────────────────────────────────
@@ -117,15 +130,19 @@ mise use -g ruby
 # Enable systemd services
 # ─────────────────────────────────────────────
 section "Enabling services..."
+
 sudo systemctl enable --now docker.service
+echo "Enabled Docker service"
+
 sudo systemctl enable --now sshd.service
-sudo systemctl enable --now tailscaled.service
+echo "Enabled sshd service"
 
 # ─────────────────────────────────────────────
 # Setup Docker group to allow sudo-less access
 # ─────────────────────────────────────────────
 if ! groups | grep -q docker; then
   sudo usermod -aG docker "$USER"
+  echo "You must log out once to make sudoless Docker available."
 fi
 
 # ─────────────────────────────────────────────
@@ -142,6 +159,7 @@ if ! tailscale status &>/dev/null; then
   echo
   if gum confirm "Connect to Tailscale network?" </dev/tty; then
     echo "This might take a minute..."
+    sudo systemctl enable --now tailscaled.service
     sudo tailscale up --ssh --accept-routes
   fi
 fi
@@ -149,6 +167,4 @@ fi
 # ─────────────────────────────────────────────
 # Post-install steps
 # ─────────────────────────────────────────────
-section "Setup complete!"
-echo "You must log out once to make sudoless Docker available."
-echo "Run omaterm-ssh-key on a console with clipboard access to switch from password to SSH key"
+section "✓ Setup complete!"

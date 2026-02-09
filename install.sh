@@ -90,6 +90,11 @@ if [[ ! -d $HOME/.config/nvim ]]; then
   git clone https://github.com/LazyVim/starter ~/.config/nvim
 fi
 
+# Use terminal ANSI colors
+mkdir -p "$HOME/.config/nvim/lua/plugins"
+download config/nvim-colorscheme.lua >"$HOME/.config/nvim/lua/plugins/colorscheme.lua"
+download config/nvim-options.lua >"$HOME/.config/nvim/lua/config/options.lua"
+
 # ─────────────────────────────────────────────
 # Bins
 # ─────────────────────────────────────────────

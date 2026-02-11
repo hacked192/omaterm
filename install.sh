@@ -92,6 +92,7 @@ echo "✓ Tmux"
 # LazyVim (https://www.lazyvim.org/)
 if [[ ! -d $HOME/.config/nvim ]]; then
   git clone https://github.com/LazyVim/starter ~/.config/nvim
+  rm -rf ~/.config/nvim/.git
   echo "✓ LazyVim"
 fi
 

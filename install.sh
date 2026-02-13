@@ -76,7 +76,7 @@ mkdir -p "$HOME/.config"
 cp -Rf "$TMPDIR/config/"* "$HOME/.config/"
 mkdir -p "$HOME/.local/bin"
 cp -Rf "$TMPDIR/bin/"* "$HOME/.local/bin/"
-chmod +x "$HOME/.local/bin/*"
+chmod +x "$HOME/.local/bin/"*
 
 # ─────────────────────────────────────────────
 # Mise tooling

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 echo
-echo -e " ▄██████▄    ▄▄▄▄███▄▄▄▄      ▄████████     ███        ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄  
+echo " ▄██████▄    ▄▄▄▄███▄▄▄▄      ▄████████     ███        ▄████████    ▄████████   ▄▄▄▄███▄▄▄▄  
 ███    ███ ▄██▀▀▀███▀▀▀██▄   ███    ███ ▀█████████▄   ███    ███   ███    ███ ▄██▀▀▀███▀▀▀██▄
 ███    ███ ███   ███   ███   ███    ███    ▀███▀▀██   ███    █▀    ███    ███ ███   ███   ███
 ███    ███ ███   ███   ███   ███    ███     ███   ▀  ▄███▄▄▄      ▄███▄▄▄▄██▀ ███   ███   ███
@@ -12,19 +12,13 @@ echo -e " ▄██████▄    ▄▄▄▄███▄▄▄▄      ▄
  ▀██████▀   ▀█   ███   █▀    ███    █▀     ▄████▀     ██████████   ███    ███  ▀█   ███   █▀ 
                                                                    ███    ███                "
 
+section() {
+  echo -e "\n==> $1"
+}
+
 # ─────────────────────────────────────────────
 # Install packages
 # ─────────────────────────────────────────────
-download() {
-  curl -fsSL "https://raw.githubusercontent.com/basecamp/omaterm/master/$1"
-}
-
-section() {
-  echo
-  echo "==> $1"
-  echo
-}
-
 OFFICIAL_PKGS=(
   base-devel git openssh sudo less inetutils whois
   starship fzf eza zoxide tmux btop jq gum man-db tldr
@@ -54,86 +48,34 @@ fi
 section "Installing AUR packages..."
 yay -S --needed --noconfirm "${AUR_PKGS[@]}"
 
-# ─────────────────────────────────────────────
-# Git config
-# ─────────────────────────────────────────────
-if [[ ! -f $HOME/.gitconfig ]]; then
-  section "Configuring git..."
+# Install Omadots
+curl -fsSL https://install.omacom.io/dots | bash
 
-  GIT_NAME=$(gum input --placeholder "Your full name" --prompt "Git name: " </dev/tty)
-  GIT_EMAIL=$(gum input --placeholder "your@email.com" --prompt "Git email: " </dev/tty)
+# Install Omaterm configs and bins
+REPO="https://github.com/omacom-io/omaterm.git"
+TMPDIR="$(mktemp -d)"
+trap 'rm -rf "$TMPDIR"' EXIT
 
-  download config/gitconfig | sed "s/{{GIT_NAME}}/${GIT_NAME}/g; s/{{GIT_EMAIL}}/${GIT_EMAIL}/g" >"$HOME/.gitconfig"
-fi
+section "Cloning Omaterm..."
+git clone --depth 1 "$REPO" "$TMPDIR"
 
-# ─────────────────────────────────────────────
-# Shell config
-# ─────────────────────────────────────────────
-section "Configuring tools..."
-download config/bashrc >"$HOME/.bashrc"
-echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' >"$HOME/.bash_profile"
-echo "✓ Bash"
-
-# Starship (https://starship.rs/)
+section "Installing config and bin..."
 mkdir -p "$HOME/.config"
-download config/starship.toml >"$HOME/.config/starship.toml"
-echo "✓ Starship"
-
-# Mise (https://mise.jdx.dev/)
-mkdir -p "$HOME/.config/mise"
-download config/mise.toml >"$HOME/.config/mise/config.toml"
-echo "✓ Mise"
-
-# Tmux
-mkdir -p "$HOME/.config/tmux"
-download config/tmux.conf >"$HOME/.config/tmux/tmux.conf"
-echo "✓ Tmux"
-
-# LazyVim (https://www.lazyvim.org/)
-if [[ ! -d $HOME/.config/nvim ]]; then
-  git clone https://github.com/LazyVim/starter ~/.config/nvim
-  rm -rf ~/.config/nvim/.git
-  echo "✓ LazyVim"
-fi
-
-# Neovim theme (change ~/.config/omaterm/nvim.theme to switch colorschemes)
-mkdir -p "$HOME/.config/omaterm"
-[[ -f "$HOME/.config/omaterm/nvim.theme" ]] || echo "tokyonight" >"$HOME/.config/omaterm/nvim.theme"
-mkdir -p "$HOME/.config/nvim/lua/plugins"
-download config/nvim/plugins/colorscheme.lua >"$HOME/.config/nvim/lua/plugins/colorscheme.lua"
-download config/nvim/config/options.lua >"$HOME/.config/nvim/lua/config/options.lua"
-download config/nvim/lazyvim.json >"$HOME/.config/nvim/lazyvim.json"
-echo "✓ Nvim"
-
-# Btop (uses built-in TTY theme for ANSI colors)
-mkdir -p "$HOME/.config/btop"
-download config/btop.conf >"$HOME/.config/btop/btop.conf"
-echo "✓ Btop"
-
-# Opencode (https://opencode.ai/)
-mkdir -p "$HOME/.config/opencode"
-download config/opencode.json >"$HOME/.config/opencode/opencode.json"
-echo "✓ Opencode"
+cp -Rf "$TMPDIR/config/"* "$HOME/.config/"
+cp -Rf "$TMPDIR/bin/"* "$HOME/.local/bin/"
+chmod +x "$HOME/.local/bin/*"
 
 # ─────────────────────────────────────────────
-# Bins
+# Omadots
 # ─────────────────────────────────────────────
-section "Adding commands..."
-mkdir -p .local/bin
+curl -fsSL https://install.omacom.io/dots | bash
 
-download bin/omaterm-reinstall >"$HOME/.local/bin/omaterm-reinstall"
-echo "✓ omaterm-reinstall"
-
-download bin/omaterm-ssh-key >"$HOME/.local/bin/omaterm-ssh-key"
-echo "✓ omaterm-ssh-key"
-
-download bin/omaterm-ts-chromium >"$HOME/.local/bin/omaterm-ts-chromium"
-echo "✓ omaterm-ts-chromium"
-
-download bin/omaterm-nvim-theme >"$HOME/.local/bin/omaterm-nvim-theme"
-echo "✓ omaterm-nvim-theme"
-
-chmod +x $HOME/.local/bin/*
+section "Configure bash..."
+echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' >"$HOME/.bash_profile"
+cat >>"$HOME/.bashrc" <<'EOF'
+source ~/.config/shell/all
+[[ -z $TMUX ]] && t
+EOF
 
 # ─────────────────────────────────────────────
 # Mise tooling

@@ -1,6 +1,6 @@
 # Omaterm
 
-An Omakase-style headless setup for Arch Linux servers or dev boxes in the spirit of Omarchy by DHH.
+An omakase headless setup for Arch Linux servers or dev boxes in the spirit of Omarchy by DHH.
 
 ## Requirements
 

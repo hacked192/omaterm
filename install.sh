@@ -16,9 +16,7 @@ section() {
   echo -e "\n==> $1"
 }
 
-# ─────────────────────────────────────────────
 # Install packages
-# ─────────────────────────────────────────────
 OFFICIAL_PKGS=(
   base-devel git openssh sudo less inetutils whois
   starship fzf eza zoxide tmux btop jq gum man-db tldr
@@ -47,9 +45,7 @@ fi
 section "Installing AUR packages..."
 yay -S --needed --noconfirm "${AUR_PKGS[@]}"
 
-# ─────────────────────────────────────────────
 # Omadots
-# ─────────────────────────────────────────────
 curl -fsSL https://install.omacom.io/dots | bash
 
 # Configs and bins
@@ -82,16 +78,12 @@ chmod +x "$HOME/.local/bin/"*
 echo "✓ omarchy-ssh"
 echo "✓ omarchy-theme"
 
-# ─────────────────────────────────────────────
 # Mise tooling
-# ─────────────────────────────────────────────
 section "Installing Ruby + Node..."
 mise use -g node
 mise use -g ruby
 
-# ─────────────────────────────────────────────
 # Enable systemd services
-# ─────────────────────────────────────────────
 section "Enabling services..."
 
 sudo systemctl enable --now docker.service
@@ -100,17 +92,12 @@ echo "✓ Docker"
 sudo systemctl enable --now sshd.service
 echo "✓ sshd"
 
-# ─────────────────────────────────────────────
 # Setup Docker group to allow sudo-less access
-# ─────────────────────────────────────────────
 if ! groups | grep -q docker; then
   sudo usermod -aG docker "$USER"
-  echo "You must log out once to make sudoless Docker available."
 fi
 
-# ─────────────────────────────────────────────
 # Interactive setup
-# ─────────────────────────────────────────────
 if ! gh auth status &>/dev/null; then
   echo
   if gum confirm "Authenticate with GitHub?" </dev/tty; then
@@ -127,8 +114,6 @@ if ! tailscale status &>/dev/null; then
   fi
 fi
 
-# ─────────────────────────────────────────────
-# Post-install steps
-# ─────────────────────────────────────────────
-echo
-echo "✓ Setup complete!"
+# Done!
+section "Finished!"
+echo "Now logout and back in for everything to take effect"

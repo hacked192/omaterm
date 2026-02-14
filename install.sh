@@ -52,19 +52,7 @@ yay -S --needed --noconfirm "${AUR_PKGS[@]}"
 # ─────────────────────────────────────────────
 curl -fsSL https://install.omacom.io/dots | bash
 
-section "Configuring bash..."
-cat >"$HOME/.bashrc" <<'EOF'
-source ~/.config/shell/all
-if [[ -z $TMUX ]]; then
-  t
-fi
-EOF
-echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' >"$HOME/.bash_profile"
-echo "✓ .bashrc"
-
-# ─────────────────────────────────────────────
-# Omaterm configs and bins
-# ─────────────────────────────────────────────
+# Configs and bins
 REPO="https://github.com/omacom-io/omaterm.git"
 TMPDIR="$(mktemp -d)"
 trap 'rm -rf "$TMPDIR"' EXIT
@@ -77,6 +65,15 @@ mkdir -p "$HOME/.config"
 cp -Rf "$TMPDIR/config/"* "$HOME/.config/"
 echo "✓ Neovim"
 echo "✓ Starship"
+
+if ! grep -q "if \[\[ -z \$TMUX \]\]" "$HOME/.bashrc" 2>/dev/null; then
+  cat >>"$HOME/.bashrc" <<'EOF'
+if [[ -z $TMUX ]]; then
+  t
+fi
+EOF
+  echo "✓ Tmux auto-start"
+fi
 
 section "Installing bins..."
 mkdir -p "$HOME/.local/bin"

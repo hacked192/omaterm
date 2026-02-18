@@ -51,15 +51,15 @@ curl -fsSL https://raw.githubusercontent.com/omacom-io/omadots/refs/heads/master
 
 # Configs and bins
 REPO="https://github.com/omacom-io/omaterm.git"
-TMPDIR="$(mktemp -d)"
-trap 'rm -rf "$TMPDIR"' EXIT
+INSTALLER_DIR="$(mktemp -d)"
+trap 'rm -rf "$INSTALLER_DIR"' EXIT
 
 section "Cloning Omaterm..."
-git clone --depth 1 "$REPO" "$TMPDIR"
+git clone --depth 1 "$REPO" "$INSTALLER_DIR"
 
 section "Installing configs..."
 mkdir -p "$HOME/.config"
-cp -Rf "$TMPDIR/config/"* "$HOME/.config/"
+cp -Rf "$INSTALLER_DIR/config/"* "$HOME/.config/"
 echo "✓ Neovim"
 echo "✓ Starship"
 
@@ -74,7 +74,7 @@ fi
 
 section "Installing bins..."
 mkdir -p "$HOME/.local/bin"
-cp -Rf "$TMPDIR/bin/"* "$HOME/.local/bin/"
+cp -Rf "$INSTALLER_DIR/bin/"* "$HOME/.local/bin/"
 chmod +x "$HOME/.local/bin/"*
 echo "✓ omarchy-ssh"
 echo "✓ omarchy-theme"

@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -euo pipefail
 
 # Set the Neovim colorscheme (takes effect on next nvim launch)

